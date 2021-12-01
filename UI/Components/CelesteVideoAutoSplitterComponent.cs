@@ -64,7 +64,7 @@ namespace LiveSplit.UI.Components
         {
             if (ScreenGrabberUtils.GetWindowTitle() == "Celeste.exe")
             {
-                Model.Start();
+                Rectangle windowBounds = ScreenGrabberUtils.GetWindowSize();
             }
         }
 

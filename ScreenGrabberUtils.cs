@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Drawing;
 
 namespace LiveSplit.ComponentUtil
 {
@@ -10,6 +11,19 @@ namespace LiveSplit.ComponentUtil
         static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll")]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        [DllImport("user32.dll")]
+        static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+        [DllImport("user32.dll")]
+        static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
 
         public static string GetWindowTitle()
         {
@@ -21,6 +35,31 @@ namespace LiveSplit.ComponentUtil
                 return buffer.ToString();
             }
             return null;
+        }
+
+        public static Rectangle GetWindowSize()
+        {
+            IntPtr handle = GetForegroundWindow();
+
+            GetWindowRect(handle, out RECT fullRect);
+            GetClientRect(handle, out RECT clientRect);
+
+            int borderWidth = ((fullRect.Right - fullRect.Left) - (clientRect.Right - clientRect.Left)) / 2;
+            int borderHeight = ((fullRect.Bottom - fullRect.Top) - (clientRect.Bottom - clientRect.Top)) / 2;
+
+            RECT trueRect = fullRect;
+            trueRect.Left += borderWidth;
+            trueRect.Top += borderHeight;
+            trueRect.Right -= borderWidth;
+            trueRect.Bottom -= borderHeight;
+
+            Rectangle trueBounds = new Rectangle();
+            trueBounds.X = trueRect.Left;
+            trueBounds.Y = trueRect.Top;
+            trueBounds.Width = trueRect.Right - trueRect.Left;
+            trueBounds.Height = trueRect.Bottom - trueRect.Top;
+
+            return trueBounds;
         }
     }
 }

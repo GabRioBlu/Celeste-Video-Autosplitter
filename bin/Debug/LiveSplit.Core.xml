@@ -9,6 +9,28 @@
             Updates the watcher and returns true if the value has changed.
             </summary>
         </member>
+        <member name="T:LiveSplit.Model.AtomicDateTime">
+            <summary>
+            Atomic. Date. and Time.
+            </summary>
+        </member>
+        <member name="P:LiveSplit.Model.AtomicDateTime.Time">
+            <summary>
+            The time.
+            </summary>
+        </member>
+        <member name="P:LiveSplit.Model.AtomicDateTime.SyncedWithAtomicClock">
+            <summary>
+            Is it synced with atomic clock?
+            </summary>
+        </member>
+        <member name="M:LiveSplit.Model.AtomicDateTime.#ctor(System.DateTime,System.Boolean)">
+            <summary>
+            atomic constructor
+            </summary>
+            <param name="time"></param>
+            <param name="synced"></param>
+        </member>
         <member name="P:LiveSplit.Model.Attempt.Duration">
             <summary>
             Returns the Real Time Duration of the attempt.
@@ -17,6 +39,18 @@
             if it's from before LiveSplit 1.6. If it is from before
             1.6 and resetted then it will return null.
             </summary>
+        </member>
+        <member name="T:LiveSplit.Model.AbbreviationExtensions">
+            <summary>
+            Abbreveation extensions? Aren't those kind of opposites?
+            </summary>
+        </member>
+        <member name="M:LiveSplit.Model.AbbreviationExtensions.GetAbbreviations(System.String)">
+            <summary>
+            Retrieve abbreviations
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
         </member>
         <member name="M:LiveSplit.Model.StringExtensions.Similarity(System.String,System.String)">
             <summary>
@@ -663,6 +697,31 @@
             <summary>
             Required method for Designer support - do not modify
             the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:LiveSplit.Web.Share.ShareSettings">
+            <summary>
+            ShareSettings I assume is settings for sharing
+            </summary>
+        </member>
+        <member name="P:LiveSplit.Web.Share.ShareSettings.Default">
+            <summary>
+            Default Settings?
+            </summary>
+        </member>
+        <member name="P:LiveSplit.Web.Share.ShareSettings.TwitterFormat">
+            <summary>
+            Twitter settings format, I guess
+            </summary>
+        </member>
+        <member name="P:LiveSplit.Web.Share.ShareSettings.TwitchFormat">
+            <summary>
+            Twitch settings format
+            </summary>
+        </member>
+        <member name="P:LiveSplit.Web.Share.ShareSettings.TwitterFormatRunning">
+            <summary>
+            Running?... Twitter format?
             </summary>
         </member>
         <member name="T:LiveSplit.Resources">

@@ -7,8 +7,8 @@
     <ProjectGuid>{E556E789-C1D7-4088-8853-E30A97E08C5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CelesteVideoAutoSplitter</RootNamespace>
-    <AssemblyName>CelesteVideoAutoSplitter</AssemblyName>
+    <RootNamespace>LiveSplit.CelesteVideoAutoSplitter</RootNamespace>
+    <AssemblyName>LiiveSpliit.CelesteVideoAutoSplitter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -68,6 +68,9 @@
     <EmbeddedResource Include="UI\Components\CelesteVideoAutoSplitterSettings.resx">
       <DependentUpon>CelesteVideoAutoSplitterSettings.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
