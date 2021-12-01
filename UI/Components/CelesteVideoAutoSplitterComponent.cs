@@ -1,16 +1,18 @@
 ﻿using LiveSplit.Model;
+using LiveSplit.ComponentUtil;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
+using System.Runtime.InteropServices;
 
 namespace LiveSplit.UI.Components
 {
     public class CelesteVideoAutoSplitterComponent : IComponent
     {
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
         public CelesteVideoAutoSplitterSettings Settings { get; set; }
 
         public string ComponentName => "Celeste Video Splitter";
@@ -25,11 +27,17 @@ namespace LiveSplit.UI.Components
         public float PaddingLeft { get { return 0; } }
         public float PaddingRight { get { return 0; } }
 
+
+        public TimerModel Model { get; set; }
+
         public IDictionary<string, Action> ContextMenuControls => null;
 
         public CelesteVideoAutoSplitterComponent(LiveSplitState state)
         {
+            Settings = new CelesteVideoAutoSplitterSettings();
+            Model = new TimerModel() { CurrentState = state };
 
+            
         }
 
         public void DrawHorizontal(Graphics g, LiveSplitState state, float height, Region clipRegion) {}
@@ -54,7 +62,10 @@ namespace LiveSplit.UI.Components
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {
-            
+            if (ScreenGrabberUtils.GetWindowTitle() == "Celeste.exe")
+            {
+                Model.Start();
+            }
         }
 
         public void Dispose()

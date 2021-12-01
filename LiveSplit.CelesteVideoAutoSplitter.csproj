@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ScreenGrabberUtils.cs" />
     <Compile Include="UI\Components\CelesteVideoAutoSplitterComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Components\CelesteVideoAutoSplitterFactory.cs" />
