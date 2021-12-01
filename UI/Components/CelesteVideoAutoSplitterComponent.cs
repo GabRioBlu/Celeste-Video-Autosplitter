@@ -32,12 +32,37 @@ namespace LiveSplit.UI.Components
 
         public IDictionary<string, Action> ContextMenuControls => null;
 
+        public List<VideoSplit> possibleSplits = new List<VideoSplit>();
+
+        public void InitSplits()
+        {
+            possibleSplits.Add(new VideoSplit()
+            {
+                splitImage = new SplitImage()
+                {
+                    imageName = "PrologueStart",
+                    gameWidth = 1920,
+                    gameHeight = 1080,
+                    imageXOffset = 0,
+                    imageYOffset = 0
+                },
+                splitType = new SplitType()
+                { 
+                    description = "Prologue (Start)",
+                    startTimer = true,
+                    splitTimer = false,
+                    pauseTimer = false,
+                    resumeTimer = false
+                }
+            });
+        }
+
         public CelesteVideoAutoSplitterComponent(LiveSplitState state)
         {
             Settings = new CelesteVideoAutoSplitterSettings();
             Model = new TimerModel() { CurrentState = state };
 
-            
+            InitSplits();
         }
 
         public void DrawHorizontal(Graphics g, LiveSplitState state, float height, Region clipRegion) {}
