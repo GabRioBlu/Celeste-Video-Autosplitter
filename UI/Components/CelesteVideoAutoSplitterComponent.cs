@@ -38,8 +38,6 @@ namespace LiveSplit.UI.Components
             Model = new TimerModel() { CurrentState = state };
 
             SplitInit.InitSplits();
-
-            
         }
 
         public void DrawHorizontal(Graphics g, LiveSplitState state, float height, Region clipRegion) {}
