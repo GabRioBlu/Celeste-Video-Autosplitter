@@ -7,7 +7,7 @@ namespace LiveSplit.ComponentUtil
     public class SplitType
     {
         public string description;
-        public bool startTimer, splitTimer, pauseTimer, resumeTimer;
+        public bool startTimer, splitTimer, pauseTimer;
     }
 
     public class SplitImage

@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace LiveSplit.ComponentUtil
 {
-    class ScreenGrabberUtils
+    public static class ScreenGrabberUtils
     {
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
