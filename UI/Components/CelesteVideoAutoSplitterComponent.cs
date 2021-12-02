@@ -63,10 +63,35 @@ namespace LiveSplit.UI.Components
             Settings.SetSettings(settings);
         }
 
-        unsafe private void DoStuff(VideoSplit currentVideoSplit)
+        unsafe private void DoStuff(Rectangle windowBounds, VideoSplit currentVideoSplit)
         {
+            Bitmap screen = ScreenGrabberUtils.CaptureWindow(windowBounds);
+            BitmapData screenData = screen.LockBits(new Rectangle(0, 0, windowBounds.Width, windowBounds.Height), ImageLockMode.ReadWrite, screen.PixelFormat);
+            byte screenBitsPerPixel = (byte)Image.GetPixelFormatSize(screenData.PixelFormat);
+
+            byte* screenScan0 = (byte*)screenData.Scan0.ToPointer();
+
+            Colour[,] screenBytes = new Colour[windowBounds.Width, windowBounds.Height];
+
+            for (int y = 0; y < screenData.Height; ++y)
+            {
+                for (int x = 0; x < screenData.Width; ++x)
+                {
+                    byte* data = screenScan0 + y * screenData.Stride + x * screenBitsPerPixel / 8;
+                    screenBytes[x, y] = new Colour()
+                    {
+                        blue = data[0],
+                        green = data[1],
+                        red = data[2]
+                    };
+                }
+            }
+
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Images\" + currentVideoSplit.description);
             float[] matchAmounts = new float[files.Length];
+
+            screen.UnlockBits(screenData);
+
             for (int i = 0; i < files.Length; i++)
             {
                 Image image = Image.FromFile(files[i]);
@@ -82,31 +107,52 @@ namespace LiveSplit.UI.Components
                 int imageRight = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[0]) - imageLeft;
                 int imageBottom = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[1]) - imageTop;
 
-                Colour[,] imageBytes = new Colour[imageRight + imageLeft, imageBottom + imageTop];
+                Colour[,] imageBytes = new Colour[imageRight - imageLeft, imageBottom - imageTop];
 
-                for (int j = 0; j < bData.Height; ++j)
+                for (int y = 0; y < bData.Height; ++y)
                 {
-                    if (j >= imageTop && j <= imageBottom)
+
+                    for (int x = 0; x < bData.Width; ++x)
                     {
+                        byte* data = scan0 + y * bData.Stride + x * bitsPerPixel / 8;
 
-                        for (int k = 0; k < bData.Width; ++k)
+                        imageBytes[x, y] = new Colour()
                         {
-                            if (k >= imageLeft && k <= imageRight)
-                            {
-                                byte* data = scan0 + j * bData.Stride + k * bitsPerPixel / 8;
+                            blue = data[0],
+                            green = data[1],
+                            red = data[2]
+                        };
+                    }
+                }
+                
+                bitmap.UnlockBits(bData);
 
-                                imageBytes[k, j] = new Colour()
-                                {
-                                    blue = data[0],
-                                    green = data[1],
-                                    red = data[2]
-                                };
-                            }
-                        }
+                float[] pixelSimilarities = new float[imageBytes.Length];
+
+                for (int x = 0; x < imageBytes.GetLength(0); ++x)
+                {
+                    for (int y = 0; y < imageBytes.GetLength(1); ++y)
+                    {
+                        float pixelSimilarity = imageBytes[x, y].Compare(screenBytes[x + imageLeft, y + imageTop]);
+                        pixelSimilarities[x * imageBytes.GetLength(1) + y] = pixelSimilarity;
                     }
                 }
 
-                bitmap.UnlockBits(bData);
+                float imageSimilarity = 0f;
+                imageSimilarity += pixelSimilarities.Sum();
+                imageSimilarity /= pixelSimilarities.Length;
+                matchAmounts[i] = imageSimilarity;
+            }
+
+            float totalConfidence = 0f;
+            totalConfidence = matchAmounts.Sum();
+            totalConfidence /= matchAmounts.Length;
+
+            using (StreamWriter w = File.AppendText(Directory.GetCurrentDirectory() + @"\log.txt"))
+            {
+                w.Write($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
+                w.Write(" :");
+                w.WriteLine($" {totalConfidence}");
             }
         }
 
@@ -117,7 +163,7 @@ namespace LiveSplit.UI.Components
                 Rectangle windowBounds = ScreenGrabberUtils.GetWindowSize();
                 VideoSplit currentVideoSplit = SplitInit.possibleSplits.ElementAt(Model.CurrentState.CurrentSplitIndex);
 
-                DoStuff(currentVideoSplit);
+                DoStuff(windowBounds, currentVideoSplit);
             }
         }
 

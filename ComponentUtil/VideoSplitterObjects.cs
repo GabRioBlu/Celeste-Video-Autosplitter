@@ -46,5 +46,18 @@ namespace LiveSplit.ComponentUtil
         public int blue;
         public int green;
         public int red;
+
+        public float Compare(Colour colour2)
+        {
+            int blueDiff = Math.Abs(this.blue - colour2.blue);
+            int greenDiff = Math.Abs(this.green - colour2.green);
+            int redDiff = Math.Abs(this.red - colour2.red);
+
+            float bluePercent = blueDiff / 255 * 100;
+            float greenPercent = greenDiff / 255 * 100;
+            float redPercent = redDiff / 255 * 100;
+
+            return 100 - (bluePercent + greenPercent + redPercent) / 3;
+        }
     }
 }

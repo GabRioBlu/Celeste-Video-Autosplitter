@@ -61,5 +61,16 @@ namespace LiveSplit.ComponentUtil
 
             return trueBounds;
         }
+
+        public static Bitmap CaptureWindow(Rectangle bounds)
+        {
+            Bitmap image = new Bitmap(bounds.Width, bounds.Height);
+            using (Graphics capture = Graphics.FromImage(image))
+            {
+                capture.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
+            }
+
+            return image;
+        }
     }
 }
