@@ -3,8 +3,11 @@ using LiveSplit.ComponentUtil;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Linq;
+using System.IO;
 
 namespace LiveSplit.UI.Components
 {
@@ -60,11 +63,61 @@ namespace LiveSplit.UI.Components
             Settings.SetSettings(settings);
         }
 
+        unsafe private void DoStuff(VideoSplit currentVideoSplit)
+        {
+            string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Images\" + currentVideoSplit.description);
+            float[] matchAmounts = new float[files.Length];
+            for (int i = 0; i < files.Length; i++)
+            {
+                Image image = Image.FromFile(files[i]);
+                Bitmap bitmap = new Bitmap(image);
+
+                BitmapData bData = bitmap.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
+                byte bitsPerPixel = (byte)Image.GetPixelFormatSize(bData.PixelFormat);
+
+                byte* scan0 = (byte*)bData.Scan0.ToPointer();
+
+                int imageLeft = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[0]);
+                int imageTop = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[1]);
+                int imageRight = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[0]) - imageLeft;
+                int imageBottom = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[1]) - imageTop;
+
+                Colour[,] imageBytes = new Colour[imageRight + imageLeft, imageBottom + imageTop];
+
+                for (int j = 0; j < bData.Height; ++j)
+                {
+                    if (j >= imageTop && j <= imageBottom)
+                    {
+
+                        for (int k = 0; k < bData.Width; ++k)
+                        {
+                            if (k >= imageLeft && k <= imageRight)
+                            {
+                                byte* data = scan0 + j * bData.Stride + k * bitsPerPixel / 8;
+
+                                imageBytes[k, j] = new Colour()
+                                {
+                                    blue = data[0],
+                                    green = data[1],
+                                    red = data[2]
+                                };
+                            }
+                        }
+                    }
+                }
+
+                bitmap.UnlockBits(bData);
+            }
+        }
+
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {
             if (ScreenGrabberUtils.GetWindowTitle() == "Celeste.exe")
             {
                 Rectangle windowBounds = ScreenGrabberUtils.GetWindowSize();
+                VideoSplit currentVideoSplit = SplitInit.possibleSplits.ElementAt(Model.CurrentState.CurrentSplitIndex);
+
+                DoStuff(currentVideoSplit);
             }
         }
 

@@ -40,4 +40,11 @@ namespace LiveSplit.ComponentUtil
             };
         }
     }
+
+    public class Colour
+    {
+        public int blue;
+        public int green;
+        public int red;
+    }
 }

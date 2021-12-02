@@ -107,22 +107,30 @@ namespace LiveSplit.UI.Components
 
         private void SplitTypeBox_CommitSelection(object sender, EventArgs e)
         {
-
+            ComboBox comboBox = (ComboBox)sender;
+            int splitIndex = comboBox.Location.Y / 25;
+            UsedSplits.ElementAt(splitIndex).description = comboBox.Text;
         }
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-
+            CheckBox checkBox = (CheckBox)sender;
+            int splitIndex = (checkBox.Location.Y - 3) / 25;
+            UsedSplits.ElementAt(splitIndex).startTimer = checkBox.Checked;
         }
 
         private void SplitButton_Click(object sender, EventArgs e)
         {
-
+            CheckBox checkBox = (CheckBox)sender;
+            int splitIndex = (checkBox.Location.Y - 3) / 25;
+            UsedSplits.ElementAt(splitIndex).splitTimer = checkBox.Checked;
         }
 
         private void PauseButton_Click(object sender, EventArgs e)
         {
-
+            CheckBox checkBox = (CheckBox)sender;
+            int splitIndex = (checkBox.Location.Y - 3) / 25;
+            UsedSplits.ElementAt(splitIndex).pauseTimer = checkBox.Checked;
         }
 
         private void btnAddSplit_Click(object sender, EventArgs e)
