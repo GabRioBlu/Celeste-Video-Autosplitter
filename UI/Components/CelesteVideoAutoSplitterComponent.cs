@@ -30,10 +30,16 @@ namespace LiveSplit.UI.Components
         public float PaddingLeft { get { return 0; } }
         public float PaddingRight { get { return 0; } }
 
+        public IDictionary<string, Action> ContextMenuControls => null;
+
+
+        private string[] files;
+
+        public VideoSplit CurrentSplit { get; set; }
 
         public TimerModel Model { get; set; }
-
-        public IDictionary<string, Action> ContextMenuControls => null;
+        
+        public Colour[][,] ImageBytes { get; set; }
 
         public CelesteVideoAutoSplitterComponent(LiveSplitState state)
         {
@@ -63,7 +69,55 @@ namespace LiveSplit.UI.Components
             Settings.SetSettings(settings);
         }
 
-        unsafe private void DoStuff(Rectangle windowBounds, VideoSplit currentVideoSplit)
+        void OnStart()
+        {
+            CurrentSplit = Settings.UsedSplits.First();
+            GetSplitImageData();
+        }
+
+        unsafe private void GetSplitImageData()
+        {
+            files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Images\" + CurrentSplit.description);
+            ImageBytes = new Colour[files.Length][,];
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                Image image = Image.FromFile(files[i]);
+                Bitmap bitmap = new Bitmap(image);
+
+                BitmapData bData = bitmap.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
+                byte bitsPerPixel = (byte)Image.GetPixelFormatSize(bData.PixelFormat);
+
+                byte* scan0 = (byte*)bData.Scan0.ToPointer();
+
+                int imageLeft = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[0]);
+                int imageTop = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[1]);
+                int imageRight = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[0]) - imageLeft;
+                int imageBottom = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[1]) - imageTop;
+
+                ImageBytes[i] = new Colour[imageRight - imageLeft, imageBottom - imageTop];
+
+                for (int y = 0; y < bData.Height; ++y)
+                {
+
+                    for (int x = 0; x < bData.Width; ++x)
+                    {
+                        byte* data = scan0 + y * bData.Stride + x * bitsPerPixel / 8;
+
+                        ImageBytes[i][x, y] = new Colour()
+                        {
+                            blue = data[0],
+                            green = data[1],
+                            red = data[2]
+                        };
+                    }
+                }
+
+                bitmap.UnlockBits(bData);
+            }
+        }
+
+        unsafe private void CompareScreen(Rectangle windowBounds)
         {
             Bitmap screen = ScreenGrabberUtils.CaptureWindow(windowBounds);
             BitmapData screenData = screen.LockBits(new Rectangle(0, 0, windowBounds.Width, windowBounds.Height), ImageLockMode.ReadWrite, screen.PixelFormat);
@@ -87,54 +141,23 @@ namespace LiveSplit.UI.Components
                 }
             }
 
-            string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Images\" + currentVideoSplit.description);
-            float[] matchAmounts = new float[files.Length];
-
             screen.UnlockBits(screenData);
+
+            float[] matchAmounts = new float[files.Length];
 
             for (int i = 0; i < files.Length; i++)
             {
-                Image image = Image.FromFile(files[i]);
-                Bitmap bitmap = new Bitmap(image);
-
-                BitmapData bData = bitmap.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
-                byte bitsPerPixel = (byte)Image.GetPixelFormatSize(bData.PixelFormat);
-
-                byte* scan0 = (byte*)bData.Scan0.ToPointer();
-
                 int imageLeft = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[0]);
                 int imageTop = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[1]);
-                int imageRight = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[0]) - imageLeft;
-                int imageBottom = int.Parse(files[i].Split('\\').Last().Split('-')[0].Split('x')[1]) - imageTop;
 
-                Colour[,] imageBytes = new Colour[imageRight - imageLeft, imageBottom - imageTop];
+                float[] pixelSimilarities = new float[ImageBytes[i].Length];
 
-                for (int y = 0; y < bData.Height; ++y)
+                for (int x = 0; x < ImageBytes[i].GetLength(0); ++x)
                 {
-
-                    for (int x = 0; x < bData.Width; ++x)
+                    for (int y = 0; y < ImageBytes[i].GetLength(1); ++y)
                     {
-                        byte* data = scan0 + y * bData.Stride + x * bitsPerPixel / 8;
-
-                        imageBytes[x, y] = new Colour()
-                        {
-                            blue = data[0],
-                            green = data[1],
-                            red = data[2]
-                        };
-                    }
-                }
-                
-                bitmap.UnlockBits(bData);
-
-                float[] pixelSimilarities = new float[imageBytes.Length];
-
-                for (int x = 0; x < imageBytes.GetLength(0); ++x)
-                {
-                    for (int y = 0; y < imageBytes.GetLength(1); ++y)
-                    {
-                        float pixelSimilarity = imageBytes[x, y].Compare(screenBytes[x + imageLeft, y + imageTop]);
-                        pixelSimilarities[x * imageBytes.GetLength(1) + y] = pixelSimilarity;
+                        float pixelSimilarity = ImageBytes[i][x, y].Compare(screenBytes[x + imageLeft, y + imageTop]);
+                        pixelSimilarities[x * ImageBytes[i].GetLength(1) + y] = pixelSimilarity;
                     }
                 }
 
@@ -161,9 +184,8 @@ namespace LiveSplit.UI.Components
             if (ScreenGrabberUtils.GetWindowTitle() == "Celeste.exe")
             {
                 Rectangle windowBounds = ScreenGrabberUtils.GetWindowSize();
-                VideoSplit currentVideoSplit = SplitInit.possibleSplits.ElementAt(Model.CurrentState.CurrentSplitIndex);
 
-                DoStuff(windowBounds, currentVideoSplit);
+                CompareScreen(windowBounds);
             }
         }
 

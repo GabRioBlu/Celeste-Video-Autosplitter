@@ -336,7 +336,7 @@ namespace LiveSplit.ComponentUtil
             {
                 description = "Chapter 8 - Core A-Side (Complete)",
                 startTimer = false,
-                splitTimer = false,
+                splitTimer = true,
                 pauseTimer = true
             });
 
