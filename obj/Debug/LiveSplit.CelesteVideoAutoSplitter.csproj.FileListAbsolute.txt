@@ -62,7 +62,7 @@ C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiveSplit.UI.Comp
 C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiveSplit.CelesteVideoAutoSplitter.csproj.GenerateResource.cache
 C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiveSplit.CelesteVideoAutoSplitter.csproj.CoreCompileInputs.cache
 C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiveSplit.CelesteVideoAutoSplitter.csproj.CopyComplete
-C:\Users\paren\source\repos\CelesteVideoAutoSplitter\bin\Debug\LiiveSpliit.CelesteVideoAutoSplitter.dll
-C:\Users\paren\source\repos\CelesteVideoAutoSplitter\bin\Debug\LiiveSpliit.CelesteVideoAutoSplitter.pdb
-C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiiveSpliit.CelesteVideoAutoSplitter.dll
-C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiiveSpliit.CelesteVideoAutoSplitter.pdb
+C:\Users\paren\source\repos\CelesteVideoAutoSplitter\bin\Debug\LiveSplit.CelesteVideoAutoSplitter.dll
+C:\Users\paren\source\repos\CelesteVideoAutoSplitter\bin\Debug\LiveSplit.CelesteVideoAutoSplitter.pdb
+C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiveSplit.CelesteVideoAutoSplitter.dll
+C:\Users\paren\source\repos\CelesteVideoAutoSplitter\obj\Debug\LiveSplit.CelesteVideoAutoSplitter.pdb

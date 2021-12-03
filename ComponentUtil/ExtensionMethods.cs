@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using LiveSplit.UI;
+using System.Diagnostics;
 
 namespace LiveSplit.ComponentUtil
 {
@@ -9,16 +10,18 @@ namespace LiveSplit.ComponentUtil
     {
         public static int CreateSetting(XmlDocument document, XmlElement parent, string name, List<VideoSplit> videoSplits)
         {
-            int hashCode = 0;
-
+            int hashCode = 53;
             if (document != null)
             {
-                foreach (VideoSplit split in videoSplits)
+                if (videoSplits != null)
                 {
-                    var element = document.CreateElement(name);
-                    element.InnerText = split.ToString();
-                    parent.AppendChild(element);
-                    hashCode ^= split.GetHashCode();
+                    foreach (VideoSplit split in videoSplits)
+                    {
+                        var element = document.CreateElement(name);
+                        element.InnerText = split.ToString();
+                        parent.AppendChild(element);
+                        hashCode = hashCode * 61 + split.GetHashCode();
+                    }
                 }
             }
 
@@ -29,9 +32,12 @@ namespace LiveSplit.ComponentUtil
         {
             List<VideoSplit> videoSplits = new List<VideoSplit>();
 
-            foreach (XmlElement split in videoSplitElement.ChildNodes)
+            if (videoSplitElement != null)
             {
-                videoSplits.Add(VideoSplit.Parse(split.InnerText));
+                foreach (XmlElement split in videoSplitElement.ChildNodes)
+                {
+                    videoSplits.Add(VideoSplit.Parse(split.InnerText));
+                }
             }
 
             return videoSplits;

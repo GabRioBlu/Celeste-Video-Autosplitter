@@ -69,12 +69,6 @@ namespace LiveSplit.UI.Components
             Settings.SetSettings(settings);
         }
 
-        void OnStart()
-        {
-            CurrentSplit = Settings.UsedSplits.First();
-            GetSplitImageData();
-        }
-
         unsafe private void GetSplitImageData()
         {
             files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Images\" + CurrentSplit.description);
@@ -177,6 +171,22 @@ namespace LiveSplit.UI.Components
                 w.Write(" :");
                 w.WriteLine($" {totalConfidence}");
             }
+
+            if (totalConfidence > 0.85f)
+            {
+                if (CurrentSplit.pauseTimer)
+                {
+                    Model.Pause();
+                }
+                if (CurrentSplit.splitTimer)
+                {
+                    Model.Split();
+                }
+                if (CurrentSplit.startTimer)
+                {
+                    Model.Start();
+                }
+            }
         }
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
@@ -191,7 +201,7 @@ namespace LiveSplit.UI.Components
 
         public void Dispose()
         {
-            
+
         }
     }
 }

@@ -7,10 +7,10 @@ namespace LiveSplit.ComponentUtil
 {
     public class VideoSplit
     {
-        public string description;
-        public bool startTimer, splitTimer, pauseTimer;
+        public string description = "";
+        public bool startTimer = false, splitTimer = false, pauseTimer = false;
 
-        public int splitIndex;
+        public int splitIndex = 0;
 
         public override string ToString()
         {
@@ -19,12 +19,12 @@ namespace LiveSplit.ComponentUtil
 
         public override int GetHashCode()
         {
-            int hashCode = -195936162;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(description);
-            hashCode = hashCode * -1521134295 + startTimer.GetHashCode();
-            hashCode = hashCode * -1521134295 + splitTimer.GetHashCode();
-            hashCode = hashCode * -1521134295 + pauseTimer.GetHashCode();
-            hashCode = hashCode * -1521134295 + splitIndex.GetHashCode();
+            int hashCode = 31;
+            hashCode = hashCode * 43 + EqualityComparer<string>.Default.GetHashCode(description);
+            hashCode = hashCode * 43 + startTimer.GetHashCode();
+            hashCode = hashCode * 43 + splitTimer.GetHashCode();
+            hashCode = hashCode * 43 + pauseTimer.GetHashCode();
+            hashCode = hashCode * 43 + splitIndex.GetHashCode();
             return hashCode;
         }
 
