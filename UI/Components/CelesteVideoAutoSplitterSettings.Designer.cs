@@ -40,20 +40,20 @@ namespace LiveSplit.UI.Components
             this.mainLayoutPanel.AutoSize = true;
             this.mainLayoutPanel.ColumnCount = 1;
             this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainLayoutPanel.Controls.Add(this.btnAddSplit, 0, 0);
-            this.mainLayoutPanel.Controls.Add(this.splitsPanel, 0, 1);
+            this.mainLayoutPanel.Controls.Add(this.splitsPanel, 0, 0);
+            this.mainLayoutPanel.Controls.Add(this.btnAddSplit, 0, 1);
             this.mainLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.mainLayoutPanel.Name = "mainLayoutPanel";
             this.mainLayoutPanel.RowCount = 2;
+            this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.mainLayoutPanel.Size = new System.Drawing.Size(379, 166);
+            this.mainLayoutPanel.Size = new System.Drawing.Size(536, 357);
             this.mainLayoutPanel.TabIndex = 0;
             // 
             // btnAddSplit
             // 
             this.btnAddSplit.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnAddSplit.Location = new System.Drawing.Point(6, 5);
+            this.btnAddSplit.Location = new System.Drawing.Point(6, 327);
             this.btnAddSplit.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
             this.btnAddSplit.Name = "btnAddSplit";
             this.btnAddSplit.Size = new System.Drawing.Size(75, 25);
@@ -68,9 +68,9 @@ namespace LiveSplit.UI.Components
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitsPanel.AutoSize = true;
-            this.splitsPanel.Location = new System.Drawing.Point(3, 38);
+            this.splitsPanel.Location = new System.Drawing.Point(3, 3);
             this.splitsPanel.Name = "splitsPanel";
-            this.splitsPanel.Size = new System.Drawing.Size(373, 125);
+            this.splitsPanel.Size = new System.Drawing.Size(530, 316);
             this.splitsPanel.TabIndex = 1;
             // 
             // CelesteVideoAutoSplitterSettings
@@ -80,7 +80,7 @@ namespace LiveSplit.UI.Components
             this.AutoSize = true;
             this.Controls.Add(this.mainLayoutPanel);
             this.Name = "CelesteVideoAutoSplitterSettings";
-            this.Size = new System.Drawing.Size(382, 169);
+            this.Size = new System.Drawing.Size(539, 360);
             this.Load += new System.EventHandler(this.CelesteVideoAutoSplitterSettings_Load);
             this.mainLayoutPanel.ResumeLayout(false);
             this.mainLayoutPanel.PerformLayout();

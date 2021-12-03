@@ -15,11 +15,13 @@ namespace LiveSplit.ComponentUtil
             {
                 if (videoSplits != null)
                 {
+                    var usedSplitsElement = document.CreateElement("UsedSplits");
+                    parent.AppendChild(usedSplitsElement);
                     foreach (VideoSplit split in videoSplits)
                     {
                         var element = document.CreateElement(name);
                         element.InnerText = split.ToString();
-                        parent.AppendChild(element);
+                        usedSplitsElement.AppendChild(element);
                         hashCode = hashCode * 61 + split.GetHashCode();
                     }
                 }
@@ -34,8 +36,11 @@ namespace LiveSplit.ComponentUtil
 
             if (videoSplitElement != null)
             {
-                foreach (XmlElement split in videoSplitElement.ChildNodes)
+                Trace.WriteLine("ish nueell?");
+                Trace.WriteLine(videoSplitElement.GetElementsByTagName("UsedSplits"));
+                foreach (XmlElement split in videoSplitElement.GetElementsByTagName("UsedSplits"))
                 {
+                    Trace.WriteLine(split.InnerText);
                     videoSplits.Add(VideoSplit.Parse(split.InnerText));
                 }
             }

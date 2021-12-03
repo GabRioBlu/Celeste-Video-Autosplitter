@@ -58,7 +58,7 @@ namespace LiveSplit.UI.Components
             Settings.Mode = mode;
             return Settings;
         }
-
+        
         public System.Xml.XmlNode GetSettings(System.Xml.XmlDocument document)
         {
             return Settings.GetSettings(document);

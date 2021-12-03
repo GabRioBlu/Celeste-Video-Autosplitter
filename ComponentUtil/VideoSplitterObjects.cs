@@ -7,7 +7,7 @@ namespace LiveSplit.ComponentUtil
 {
     public class VideoSplit
     {
-        public string description = "";
+        public string description = "Prologue (Start)";
         public bool startTimer = false, splitTimer = false, pauseTimer = false;
 
         public int splitIndex = 0;
