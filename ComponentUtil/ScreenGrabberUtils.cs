@@ -72,5 +72,11 @@ namespace LiveSplit.ComponentUtil
 
             return image;
         }
+
+        public static Bitmap ResizeImage(Bitmap map, int width, int height)
+        {
+            Bitmap resized = new Bitmap(map, width, height);
+            return resized;
+        }
     }
 }

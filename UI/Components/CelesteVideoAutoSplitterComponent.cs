@@ -113,34 +113,39 @@ namespace LiveSplit.UI.Components
 
         unsafe private void CompareScreen(Rectangle windowBounds)
         {
-            Bitmap screen = ScreenGrabberUtils.CaptureWindow(windowBounds);
-            BitmapData screenData = screen.LockBits(new Rectangle(0, 0, windowBounds.Width, windowBounds.Height), ImageLockMode.ReadWrite, screen.PixelFormat);
-            byte screenBitsPerPixel = (byte)Image.GetPixelFormatSize(screenData.PixelFormat);
-
-            byte* screenScan0 = (byte*)screenData.Scan0.ToPointer();
-
-            Colour[,] screenBytes = new Colour[windowBounds.Width, windowBounds.Height];
-
-            for (int y = 0; y < screenData.Height; ++y)
-            {
-                for (int x = 0; x < screenData.Width; ++x)
-                {
-                    byte* data = screenScan0 + y * screenData.Stride + x * screenBitsPerPixel / 8;
-                    screenBytes[x, y] = new Colour()
-                    {
-                        blue = data[0],
-                        green = data[1],
-                        red = data[2]
-                    };
-                }
-            }
-
-            screen.UnlockBits(screenData);
-
             float[] matchAmounts = new float[files.Length];
 
             for (int i = 0; i < files.Length; i++)
             {
+                int screenWidth = int.Parse(files[i].Split('-')[0].Split('x')[0]);
+                int screenHeight = int.Parse(files[i].Split('-')[0].Split('x')[1]);
+
+                Bitmap screen = ScreenGrabberUtils.CaptureWindow(windowBounds);
+                Bitmap resizedScreen = ScreenGrabberUtils.ResizeImage(screen, screenWidth, screenHeight);
+                BitmapData screenData = resizedScreen.LockBits(new Rectangle(0, 0, screenWidth, screenWidth), 
+                    ImageLockMode.ReadWrite, screen.PixelFormat);
+                byte screenBitsPerPixel = (byte)Image.GetPixelFormatSize(screenData.PixelFormat);
+
+                byte* screenScan0 = (byte*)screenData.Scan0.ToPointer();
+
+                Colour[,] screenBytes = new Colour[screenWidth, screenHeight];
+
+                for (int y = 0; y < screenData.Height; ++y)
+                {
+                    for (int x = 0; x < screenData.Width; ++x)
+                    {
+                        byte* data = screenScan0 + y * screenData.Stride + x * screenBitsPerPixel / 8;
+                        screenBytes[x, y] = new Colour()
+                        {
+                            blue = data[0],
+                            green = data[1],
+                            red = data[2]
+                        };
+                    }
+                }
+
+                resizedScreen.UnlockBits(screenData);
+
                 int imageLeft = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[0]);
                 int imageTop = int.Parse(files[i].Split('\\').Last().Split('.')[0].Split('-')[1].Split('x')[1]);
 
